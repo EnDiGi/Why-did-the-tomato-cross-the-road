@@ -118,10 +118,11 @@ function gameloop(){
 gameloop()
 
 function handleKeydown(event){
+
 	switch(event.keyCode){
 		case 37: // Left arrow
-			tomato.move("left");
-			break;
+		tomato.move("left");
+		break;
 		case 38: // Up arrow
 			tomato.move("up");
 			break;
@@ -130,6 +131,18 @@ function handleKeydown(event){
 			break;
 		case 40: // Down arrow
 			tomato.move("down");
+			break;
+		case 87: // W
+			tomato.move("up");
+			break;
+		case 65: // A
+			tomato.move("left");
+			break;
+		case 83: // S
+			tomato.move("down");
+			break;
+		case 68: // D			
+			tomato.move("right");
 			break;
 	}
 }
