@@ -3,7 +3,7 @@ body{
 }
 
 canvas{
-	background-color: red;
+	background-color: skyblue;
 }
 
 #buttons-container{
@@ -14,7 +14,7 @@ canvas{
 }
 
 .arrow {
-	background-color: none;
+	background-color: rgba(255, 255, 255, 200);
 	border: 2px solid #111111;
 	font-size: 24px;
 	padding: 15px 30px;
@@ -24,4 +24,17 @@ canvas{
 
 #blank {
 	visibility: hidden;
+}
+
+
+#score_counter {
+	color: white;
+	font-family: Arial, Helvetica, sans-serif;
+	font-weight: bolder;
+	position: absolute;
+	top: 30px;
+	margin: auto;
+	width: 100%;
+	font-size: 70px;
+	left: 0px
 }
