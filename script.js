@@ -1,11 +1,12 @@
 
 let stains = [];
 let active_tiles = [];
+let cars = []
 
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 
-canvas.width = 360;
+canvas.width = document.getElementById('body').style.fontSize === 30 ? 360 : 480;
 canvas.height = 666;
 
 class Tile{
@@ -20,6 +21,13 @@ class Tile{
 		this.sprite = new Image;
 
 		this.can_spawn_cars = null
+
+		this.can_spawn_car = true;
+	}
+
+	spawn_car(){
+		cars.push(new Car(this.y))
+		setTimeout(() => {this.can_spawn_car = true}, Math.random() * 3000 + 2000)
 	}
 }
 
@@ -57,19 +65,36 @@ class Road extends Tile{
 
 tile_types = [Light_Grass, Dark_Grass, Road]
 
+class Car{
+	constructor(road_y){
+		this.x = 0;
+		this.y = road_y
+		this.width = 120;
+		this.height = 60;
+
+		this.move_speed = 10;
+	}
+
+	move(){
+		this.x += this.move_speed
+		if(this.x >= canvas.width){cars.splice(this)}
+	}
+}
+
 const paths = {
-	initial_path: [0, 1, 0, 1, 2],
+	initial_path: [0, 1, 0, 1, 0, 1],
 	paths_to_choose: [
-		[0, 1, 2, 2, 2],
-		[0, 1, 2, 2, 1],
-		[2, 1, 0, 2, 1]
+		[0, 1, 2, 2, 2, 0, 1, 2, 2, 1],
+		[0, 1, 2, 2, 1, 0, 1, 0, 2, 2],
+		[2, 1, 0, 2, 1, 0, 1, 0, 2, 2],
+		[0, 1, 0, 1, 2, 2, 1, 2, 0, 1]
 	],
 	last_path_generated: 0,
 }
 
 let tomato = {
-	x: 150,
-	y: canvas.height - 120,
+	x: canvas.width / 2 - 60 / 2,
+	y: canvas.height - 180,
 	width: 50,
 	height: 50,
 	move_speed: 60,
@@ -168,13 +193,13 @@ function generate_path(path = choose(paths.paths_to_choose)){
 	path.forEach((tile_num) => {
 		switch(tile_num){
 			case 0:
-				active_tiles.push(new Light_Grass((tomato.current_row + 10) + paths.last_path_generated - 21));
+				active_tiles.push(new Light_Grass((tomato.current_row + 8) + paths.last_path_generated - 21));
 				break;
 			case 1:
-				active_tiles.push(new Dark_Grass((tomato.current_row + 10) + paths.last_path_generated - 21));
+				active_tiles.push(new Dark_Grass((tomato.current_row + 8) + paths.last_path_generated - 21));
 				break;
 			case 2:
-				active_tiles.push(new Road((tomato.current_row + 10) + paths.last_path_generated - 21));
+				active_tiles.push(new Road((tomato.current_row + 8) + paths.last_path_generated - 21));
 				break;
 		}
 		paths.last_path_generated++
@@ -205,6 +230,14 @@ function update(){
 	if(tomato.current_row >= tomato.next_row_to_generate_path){
 		generate_path();
 	}
+
+	active_tiles.forEach((tile) => {
+		if(tile.can_spawn_cars && tile.can_spawn_car){
+			tile.spawn_car()
+		}
+	})
+
+	cars.forEach((car) => {car.move()})
 
 	document.getElementById('score_counter').textContent = tomato.max_row
 
